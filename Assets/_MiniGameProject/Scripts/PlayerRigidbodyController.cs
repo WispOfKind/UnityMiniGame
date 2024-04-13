@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerRigidbodyController : MonoBehaviour
 {
@@ -9,34 +10,33 @@ public class PlayerRigidbodyController : MonoBehaviour
 
     [SerializeField] private Rigidbody PlayerRigidbody;
     [SerializeField] private float Speed;
+    [SerializeField] private FixedJoystick Joystick;
 
     [SerializeField] private LayerMask FloorMask;
     [SerializeField] private Transform FeetTransform;
     [SerializeField] private float JumpForce;
 
     
-    void Start()
+    void FixedUpdate()
     {
-        
-    }
-
-    void Update()
-    {
-        PlayerMovementInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        //PlayerMovementInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
         MovePlayer();
     }
 
     private void MovePlayer()
     {
-        Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
-        PlayerRigidbody.velocity = new Vector3(MoveVector.x, PlayerRigidbody.velocity.y, MoveVector.z);
+        PlayerRigidbody.velocity = new Vector3 (Joystick.Horizontal * Speed, PlayerRigidbody.velocity.y, Joystick.Vertical * Speed);
+        
+        //Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
+        //PlayerRigidbody.velocity = new Vector3(MoveVector.x, PlayerRigidbody.velocity.y, MoveVector.z);
+        
+    }
+
+    public void Jump()
+    {
         if (Physics.CheckSphere(FeetTransform.position, 0.1f, FloorMask))
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                PlayerRigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
-            }
+            PlayerRigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
         }
-        
     }
 }

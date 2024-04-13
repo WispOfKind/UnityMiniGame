@@ -6,13 +6,7 @@ using UnityEngine.UIElements;
 public class CoinRotation : MonoBehaviour
 {
     private float rotateSpeed = 5;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         transform.Rotate(rotateSpeed, 0, 0);
